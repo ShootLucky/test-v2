@@ -128,7 +128,7 @@ function Lib:Init(Settings)
 			end
 		end
 	end
-	Settings["Description"]=Settings["Decription"] or "Nuy Lunar.vip to get a key"
+	Settings["Description"]=Settings["Decription"] or "Buy Lunar.vip to get a key"
 
 	-- Key system variable
 	local _5432Key543Entered7654 = false
