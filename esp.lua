@@ -29,160 +29,93 @@ local function MakeDraggable(topbarobject, object)
     local DragStart = nil
     local StartPosition = nil
 
-    -- Updates position during drag
     local function Update(input)
         local Delta = input.Position - DragStart
-        local DX, DY= Delta.X,Delta.Y
         local pos = UDim2.new(
             StartPosition.X.Scale,
-            StartPosition.X.Offset + DX,
+            StartPosition.X.Offset + Delta.X,
             StartPosition.Y.Scale,
-            StartPosition.Y.Offset + DY
+            StartPosition.Y.Offset + Delta.Y
         )
-        TS:Create(object,TweenInfo.new(.2,Enum.EasingStyle.Back),{Position = pos}):Play()
+        TS:Create(object, TweenInfo.new(0.2, Enum.EasingStyle.Back), {Position = pos}):Play()
     end
 
-    -- Starts dragging on input
-    topbarobject.InputBegan:Connect(
-        function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                Dragging = true
-                DragStart = input.Position
-                StartPosition = object.Position
-
-                input.Changed:Connect(
-                    function()
-                        Dragging = false
-                    end)
-            end
-        end)
-
-    -- Tracks drag movement
-    topbarobject.InputChanged:Connect(
-        function(input)
-            if
-                input.UserInputType == Enum.UserInputType.MouseMovement or
-                input.UserInputType == Enum.UserInputType.Touch
-            then
-                DragInput = input
-            end
+    topbarobject.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            Dragging = true
+            DragStart = input.Position
+            StartPosition = object.Position
+            input.Changed:Connect(function() Dragging = false end)
         end
-    )
+    end)
 
-    -- Updates position on input change
-    UIS.InputChanged:Connect(
-        function(input)
-            if input == DragInput and Dragging then
-                Update(input)
-            end
+    topbarobject.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            DragInput = input
         end
-    )
+    end)
+
+    UIS.InputChanged:Connect(function(input)
+        if input == DragInput and Dragging then
+            Update(input)
+        end
+    end)
 end
-
--- Prints credits. Please don't remove it
-print("Credits to ShootLucky")
 
 -- Library object definition
 local Lib = {}
 
--- Library initialization function
 function Lib:Init(Settings)
     local tic = tick()
-    Settings=Settings or {}
-    Settings.Debug=Settings.Debug or true
+    Settings = Settings or {}
+    Settings.Debug = Settings.Debug or true
 
-    -- Debug mode environment check
-    if Settings.Debug==true then        
-        if not _G["UNCks_checked"] then
-            print("⏺️[UNC] Starting environment check for script")
-            local fails,passes=0,0
-            for _, func in pairs({"setclipboard","request","readfile","writefile","isfile"}) do
-                local success = getGlobal(func)
-                if success then
-                    passes=passes+1
-                    print("✅[UNC] Check of \"" .. func .. "\" was passed")
-                else
-                    fails=fails+1
-                    warn("⛔[UNC] Check of \"" .. func .. "\" was failed ")
-                end
-            end
-            _G["UNCks_checked"] = true
-            local rate = math.round(passes / (passes + fails) * 100)
-            print(("⏺️[UNC] Checked with a %s%% success rate (%s out of %s)"):format(rate,passes,(passes + fails)))
+    -- Debug checks
+    if Settings.Debug and not _G["UNCks_checked"] then
+        local fails, passes = 0, 0
+        for _, func in pairs({"setclipboard","request","readfile","writefile","isfile"}) do
+            if getGlobal(func) then passes += 1 else fails += 1 end
         end
-        print("⏺️[Key System] Loading...")
+        _G["UNCks_checked"] = true
     end
 
-    -- Sets default settings
-    for name, value in pairs({
-        ["Debug"]= true,
-        ["Verify"]= function(...)return true end,
-        ["Title"]= "Lunar Key System",
-        ["Link"]="https://lunar.vip",
-        ["SaveKey"]=true,
-        ["Logo"]="rbxassetid://8573754371", -- Moon glow texture
-        }) do
-        if Settings[name]==nil or typeof(Settings[name])~=typeof(value) then
-            Settings[name]=value
-            if Settings.Debug == true then
-                warn(("⚠️[KeySystem] Setting \"%s\" is not %s."):format(name,typeof(value)))
-            end
-        end
-    end
-    Settings["Description"]=Settings["Decription"] or "Purchase at Lunar.vip to get your key"
+    -- Default settings
+    Settings.Title = Settings.Title or "Lunar Key System"
+    Settings.Description = Settings.Description or "Purchase at Lunar.vip to get your key"
+    Settings.Link = Settings.Link or "https://lunar.vip"
+    Settings.SaveKey = Settings.SaveKey ~= false
+    Settings.Verify = Settings.Verify or function() return true end
+    Settings.Logo = Settings.Logo or "rbxassetid://8573754371"
 
-    -- Key system variable
-    local _5432Key543Entered7654 = false
-
-    -- Creates main UI components
+    -- Main UI construction
     local KeySystem = Instance.new("ScreenGui")
-    local MainContainer = Instance.new("CanvasGroup")
-    local MainCorner = Instance.new("UICorner")
-    local MainStroke = Instance.new("UIStroke")
-    local MoonGlow = Instance.new("ImageLabel")
-    local TopBar = Instance.new("Frame")
-    local Title = Instance.new("TextLabel")
-    local CloseButton = Instance.new("ImageButton")
-    local ContentFrame = Instance.new("Frame")
-    local Description = Instance.new("TextLabel")
-    local KeyInputContainer = Instance.new("Frame")
-    local KeyInput = Instance.new("TextBox")
-    local KeyPlaceholder = Instance.new("TextLabel")
-    local InputUnderline = Instance.new("Frame")
-    local ButtonContainer = Instance.new("Frame")
-    local GetKeyButton = Instance.new("TextButton")
-    local DiscordButton = Instance.new("TextButton")
-    local ButtonCorner1 = Instance.new("UICorner")
-    local ButtonCorner2 = Instance.new("UICorner")
-    local ButtonStroke1 = Instance.new("UIStroke")
-    local ButtonStroke2 = Instance.new("UIStroke")
-
-    -- Configures ScreenGui properties
     KeySystem.Name = "LunarKeySystem"
     KeySystem.DisplayOrder = 999
     KeySystem.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    KeySystem.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    KeySystem.Parent = P.LocalPlayer:WaitForChild("PlayerGui")
 
-    -- Main container with lunar styling
+    local MainContainer = Instance.new("CanvasGroup")
     MainContainer.Name = "MainContainer"
     MainContainer.AnchorPoint = Vector2.new(0.5, 0.5)
-    MainContainer.BackgroundColor3 = Color3.fromRGB(15, 15, 30) -- Deep space blue
-    MainContainer.BorderSizePixel = 0
+    MainContainer.BackgroundColor3 = Color3.fromRGB(15, 15, 30)
+    MainContainer.BackgroundTransparency = 0
+    MainContainer.GroupTransparency = 0
     MainContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
     MainContainer.Size = UDim2.new(0, 450, 0, 300)
     MainContainer.Parent = KeySystem
 
-    -- Soft rounded corners
+    local MainCorner = Instance.new("UICorner")
     MainCorner.CornerRadius = UDim.new(0, 14)
     MainCorner.Parent = MainContainer
 
-    -- Glowing border effect
-    MainStroke.Color = Color3.fromRGB(80, 120, 200) -- Moonlight blue
+    local MainStroke = Instance.new("UIStroke")
+    MainStroke.Color = Color3.fromRGB(80, 120, 200)
     MainStroke.Thickness = 2
     MainStroke.Transparency = 0.7
     MainStroke.Parent = MainContainer
 
-    -- Moon glow background effect
+    -- Moon glow effect
+    local MoonGlow = Instance.new("ImageLabel")
     MoonGlow.Name = "MoonGlow"
     MoonGlow.AnchorPoint = Vector2.new(0.5, 0.5)
     MoonGlow.BackgroundTransparency = 1
@@ -191,19 +124,18 @@ function Lib:Init(Settings)
     MoonGlow.Image = Settings.Logo
     MoonGlow.ImageColor3 = Color3.fromRGB(30, 50, 100)
     MoonGlow.ImageTransparency = 0.85
-    MoonGlow.ScaleType = Enum.ScaleType.Slice
-    MoonGlow.SliceCenter = Rect.new(100, 100, 100, 100)
     MoonGlow.ZIndex = -1
     MoonGlow.Parent = MainContainer
 
-    -- Top bar with title
+    -- Top bar
+    local TopBar = Instance.new("Frame")
     TopBar.Name = "TopBar"
     TopBar.BackgroundColor3 = Color3.fromRGB(25, 25, 45)
-    TopBar.BorderSizePixel = 0
     TopBar.Size = UDim2.new(1, 0, 0, 40)
     TopBar.Parent = MainContainer
 
-    -- Elegant title text
+    -- Title
+    local Title = Instance.new("TextLabel")
     Title.Name = "Title"
     Title.AnchorPoint = Vector2.new(0.5, 0.5)
     Title.BackgroundTransparency = 1
@@ -211,31 +143,31 @@ function Lib:Init(Settings)
     Title.Size = UDim2.new(0.8, 0, 1, 0)
     Title.Font = Enum.Font.GothamBold
     Title.Text = Settings.Title
-    Title.TextColor3 = Color3.fromRGB(220, 230, 255) -- Moon glow white
+    Title.TextColor3 = Color3.fromRGB(220, 230, 255)
     Title.TextSize = 20
-    Title.TextTransparency = 0.1
     Title.Parent = TopBar
 
-    -- Minimal close button
+    -- Close button
+    local CloseButton = Instance.new("ImageButton")
     CloseButton.Name = "CloseButton"
     CloseButton.AnchorPoint = Vector2.new(1, 0.5)
     CloseButton.BackgroundTransparency = 1
     CloseButton.Position = UDim2.new(1, -15, 0.5, 0)
     CloseButton.Size = UDim2.new(0, 25, 0, 25)
-    CloseButton.Image = "rbxassetid://3926305904" -- X icon
+    CloseButton.Image = "rbxassetid://3926305904"
     CloseButton.ImageColor3 = Color3.fromRGB(180, 190, 220)
-    CloseButton.ImageRectOffset = Vector2.new(284, 4)
-    CloseButton.ImageRectSize = Vector2.new(24, 24)
     CloseButton.Parent = TopBar
 
-    -- Content area
+    -- Content frame
+    local ContentFrame = Instance.new("Frame")
     ContentFrame.Name = "ContentFrame"
     ContentFrame.BackgroundTransparency = 1
     ContentFrame.Position = UDim2.new(0, 0, 0, 40)
     ContentFrame.Size = UDim2.new(1, 0, 1, -40)
     ContentFrame.Parent = MainContainer
 
-    -- Description text
+    -- Description
+    local Description = Instance.new("TextLabel")
     Description.Name = "Description"
     Description.AnchorPoint = Vector2.new(0.5, 0)
     Description.BackgroundTransparency = 1
@@ -245,12 +177,11 @@ function Lib:Init(Settings)
     Description.Text = Settings.Description
     Description.TextColor3 = Color3.fromRGB(180, 200, 220)
     Description.TextSize = 14
-    Description.TextTransparency = 0.2
     Description.TextWrapped = true
-    Description.TextYAlignment = Enum.TextYAlignment.Top
     Description.Parent = ContentFrame
 
-    -- Key input container
+    -- Key input
+    local KeyInputContainer = Instance.new("Frame")
     KeyInputContainer.Name = "KeyInputContainer"
     KeyInputContainer.AnchorPoint = Vector2.new(0.5, 0.5)
     KeyInputContainer.BackgroundTransparency = 1
@@ -258,21 +189,18 @@ function Lib:Init(Settings)
     KeyInputContainer.Size = UDim2.new(0.8, 0, 0, 50)
     KeyInputContainer.Parent = ContentFrame
 
-    -- Key input box
+    local KeyInput = Instance.new("TextBox")
     KeyInput.Name = "KeyInput"
     KeyInput.AnchorPoint = Vector2.new(0.5, 0.5)
     KeyInput.BackgroundTransparency = 1
     KeyInput.Position = UDim2.new(0.5, 0, 0.5, 0)
     KeyInput.Size = UDim2.new(1, 0, 1, 0)
     KeyInput.Font = Enum.Font.Gotham
-    KeyInput.PlaceholderColor3 = Color3.fromRGB(120, 140, 180)
-    KeyInput.Text = ""
     KeyInput.TextColor3 = Color3.fromRGB(220, 230, 255)
     KeyInput.TextSize = 16
-    KeyInput.TextXAlignment = Enum.TextXAlignment.Left
     KeyInput.Parent = KeyInputContainer
 
-    -- Floating placeholder text
+    local KeyPlaceholder = Instance.new("TextLabel")
     KeyPlaceholder.Name = "KeyPlaceholder"
     KeyPlaceholder.AnchorPoint = Vector2.new(0, 0.5)
     KeyPlaceholder.BackgroundTransparency = 1
@@ -282,10 +210,9 @@ function Lib:Init(Settings)
     KeyPlaceholder.Text = "Enter your lunar key..."
     KeyPlaceholder.TextColor3 = Color3.fromRGB(120, 140, 180)
     KeyPlaceholder.TextSize = 16
-    KeyPlaceholder.TextXAlignment = Enum.TextXAlignment.Left
     KeyPlaceholder.Parent = KeyInput
 
-    -- Animated underline effect
+    local InputUnderline = Instance.new("Frame")
     InputUnderline.Name = "InputUnderline"
     InputUnderline.AnchorPoint = Vector2.new(0.5, 1)
     InputUnderline.BackgroundColor3 = Color3.fromRGB(100, 150, 220)
@@ -294,7 +221,8 @@ function Lib:Init(Settings)
     InputUnderline.Size = UDim2.new(0, 0, 0, 2)
     InputUnderline.Parent = KeyInputContainer
 
-    -- Button container
+    -- Buttons
+    local ButtonContainer = Instance.new("Frame")
     ButtonContainer.Name = "ButtonContainer"
     ButtonContainer.AnchorPoint = Vector2.new(0.5, 1)
     ButtonContainer.BackgroundTransparency = 1
@@ -302,7 +230,7 @@ function Lib:Init(Settings)
     ButtonContainer.Size = UDim2.new(0.8, 0, 0, 40)
     ButtonContainer.Parent = ContentFrame
 
-    -- Get Key button
+    local GetKeyButton = Instance.new("TextButton")
     GetKeyButton.Name = "GetKeyButton"
     GetKeyButton.AnchorPoint = Vector2.new(0.5, 0.5)
     GetKeyButton.BackgroundColor3 = Color3.fromRGB(40, 60, 90)
@@ -315,7 +243,7 @@ function Lib:Init(Settings)
     GetKeyButton.TextSize = 14
     GetKeyButton.Parent = ButtonContainer
 
-    -- Discord button
+    local DiscordButton = Instance.new("TextButton")
     DiscordButton.Name = "DiscordButton"
     DiscordButton.AnchorPoint = Vector2.new(0.5, 0.5)
     DiscordButton.BackgroundColor3 = Color3.fromRGB(60, 70, 120)
@@ -329,32 +257,25 @@ function Lib:Init(Settings)
     DiscordButton.Parent = ButtonContainer
 
     -- Button styling
-    ButtonCorner1.CornerRadius = UDim.new(0, 8)
-    ButtonCorner1.Parent = GetKeyButton
-    
-    ButtonCorner2.CornerRadius = UDim.new(0, 8)
-    ButtonCorner2.Parent = DiscordButton
-    
-    ButtonStroke1.Color = Color3.fromRGB(100, 160, 220)
-    ButtonStroke1.Transparency = 0.7
-    ButtonStroke1.Thickness = 1.5
-    ButtonStroke1.Parent = GetKeyButton
-    
-    ButtonStroke2.Color = Color3.fromRGB(120, 140, 220)
-    ButtonStroke2.Transparency = 0.7
-    ButtonStroke2.Thickness = 1.5
-    ButtonStroke2.Parent = DiscordButton
+    for _, button in pairs({GetKeyButton, DiscordButton}) do
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 8)
+        corner.Parent = button
+        
+        local stroke = Instance.new("UIStroke")
+        stroke.Color = button == GetKeyButton and Color3.fromRGB(100, 160, 220) or Color3.fromRGB(120, 140, 220)
+        stroke.Transparency = 0.7
+        stroke.Thickness = 1.5
+        stroke.Parent = button
+    end
 
-    -- Make the window draggable
+    -- Make draggable
     MakeDraggable(TopBar, MainContainer)
 
-    -- Close button functionality
+    -- Close button
     CloseButton.MouseButton1Click:Connect(function()
-        TS:Create(MainContainer, TweenInfo.new(0.3), {
-            Size = UDim2.new(0, 0, 0, 0),
-            Position = UDim2.new(0.5, 0, 0.5, 0)
-        }):Play()
-        wait(0.3)
+        TS:Create(MainContainer, TweenInfo.new(0.3), {GroupTransparency = 1}):Play()
+        task.wait(0.3)
         KeySystem:Destroy()
     end)
 
@@ -366,7 +287,6 @@ function Lib:Init(Settings)
                 TextColor3 = Color3.fromRGB(200, 230, 255)
             }):Play()
         end)
-        
         button.MouseLeave:Connect(function()
             TS:Create(button, TweenInfo.new(0.2), {
                 BackgroundTransparency = 0.5,
@@ -374,11 +294,10 @@ function Lib:Init(Settings)
             }):Play()
         end)
     end
-
     setupButtonHover(GetKeyButton)
     setupButtonHover(DiscordButton)
 
-    -- Text box focus effects
+    -- Key input focus effects
     KeyInput.Focused:Connect(function()
         KeyPlaceholder.TextTransparency = 1
         TS:Create(InputUnderline, TweenInfo.new(0.3), {
@@ -395,41 +314,20 @@ function Lib:Init(Settings)
             Size = UDim2.new(0, 0, 0, 2),
             BackgroundColor3 = Color3.fromRGB(100, 150, 220)
         }):Play()
-        
-        -- Key verification
-        local CurrentKeyInput = KeyInput.Text
-        if string.gsub(CurrentKeyInput," ","") ~= "" and typeof(Settings.Verify)== "function" then
-            local a = Settings.Verify(CurrentKeyInput)
-            if typeof(a)=="boolean" then
-                _5432Key543Entered7654= a
-                if Settings.Debug == true then
-                    if a then
-                        print("✅[Key System] Key is valid"..(" (%s)"):format(CurrentKeyInput))
-                    else
-                        print("⛔[Key System] Key is invalid"..(" (%s)"):format(CurrentKeyInput))
-                    end
-                end
-            end
-        end
     end)
 
     -- Button functionality
     GetKeyButton.MouseButton1Click:Connect(function()
         if Settings.Link then
             KeyInput.Text = Settings.Link
-            if setclipboard then
-                setclipboard(Settings.Link)
-            end
+            if setclipboard then setclipboard(Settings.Link) end
         end
     end)
 
     DiscordButton.MouseButton1Click:Connect(function()
         if Settings.Discord then
             KeyInput.Text = Settings.Discord
-            if setclipboard then
-                setclipboard(Settings.Discord)
-            end
-            -- Attempt to join Discord through app
+            if setclipboard then setclipboard(Settings.Discord) end
             if request then
                 pcall(function()
                     local invite = Settings.Discord:gsub("https://discord.gg/", ""):gsub("https://discord.com/invite/", "")
@@ -457,39 +355,35 @@ function Lib:Init(Settings)
         Size = UDim2.new(0, 450, 0, 300)
     }):Play()
 
-    -- Load saved key if available
-    if Settings.SaveKey and readfile and isfile and isfile(Settings["Title"]:gsub(" ",""):lower() .. ".key") then
-        local CurrentKeyInput = readfile(Settings["Title"]:gsub(" ",""):lower() .. ".key") 
-        _5432Key543Entered7654= pcall(Settings.Verify,CurrentKeyInput)
-        if Settings.Debug == true then
-            if _5432Key543Entered7654 then
-                print("✅[Key System] Saved key is valid"..(" (%s)"):format(CurrentKeyInput))
-            else
-                print("⛔[Key System] Saved key is invalid"..(" (%s)"):format(CurrentKeyInput))
+    -- Key verification
+    local keyVerified = false
+    KeyInput.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            local success, result = pcall(Settings.Verify, KeyInput.Text)
+            if success and type(result) == "boolean" then
+                keyVerified = result
+                if Settings.Debug then
+                    print(result and "✅ Valid key" or "❌ Invalid key")
+                end
+                if result and Settings.SaveKey and writefile then
+                    writefile(Settings.Title:gsub(" ", ""):lower() .. ".key", KeyInput.Text)
+                end
             end
         end
+    end)
+
+    -- Main loop
+    repeat task.wait() until keyVerified or not KeySystem.Parent
+
+    if keyVerified then
+        TS:Create(MainContainer, TweenInfo.new(0.3), {
+            GroupTransparency = 1
+        }):Play()
+        task.wait(0.3)
+        KeySystem:Destroy()
     end
 
-    -- Handles key validation and UI lifecycle
-    if _5432Key543Entered7654 then
-        return true
-    else
-        repeat wait() until _5432Key543Entered7654 == true or not KeySystem.Parent
-        
-        if Settings.SaveKey and _5432Key543Entered7654 and writefile then
-            writefile(Settings["Title"]:gsub(" ",""):lower() .. ".key", KeyInput.Text) 
-        end
-        
-        TS:Create(MainContainer, TweenInfo.new(0.3), {
-            GroupTransparency=1
-        }):Play()
-        wait(0.3)
-        KeySystem:Destroy()
-        
-        return _5432Key543Entered7654
-    end
+    return keyVerified
 end
 
--- Sets library to global environment
-getgenv().Lib=Lib
 return Lib
