@@ -136,7 +136,7 @@ function Lib:Init(Settings)
 
     -- Creates main UI components
     local KeySystem = Instance.new("ScreenGui")
-    local MainContainer = Instance.new("Frame")
+    local MainContainer = Instance.new("CanvasGroup")
     local MainCorner = Instance.new("UICorner")
     local MainStroke = Instance.new("UIStroke")
     local MoonGlow = Instance.new("ImageLabel")
