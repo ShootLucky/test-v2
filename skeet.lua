@@ -2479,17 +2479,84 @@ local rage = window:CreatePage({Icon = "rbxassetid://8547236654"})
 local rage_aimbot = rage:CreateSection({Name = "Aimbot", Size = 510, Side = "Left"})
 local rage_other = rage:CreateSection({Name = "Other", Size = 510, Side = "Right"})
 
+-- Rage Aimbot Section
+rage_aimbot:CreateToggle({Name = "Enabled", State = false})
+rage_aimbot:CreateKeybind({Name = "Aimbot Key"})
+rage_aimbot:CreateDropdown({Name = "Hitbox", State = 1, Options = {"Head", "Chest", "Pelvis", "Nearest"}})
+rage_aimbot:CreateSlider({Name = "FOV", State = 90, Max = 180, Min = 0, Decimals = 1, Suffix = "°"})
+rage_aimbot:CreateSlider({Name = "Smoothness", State = 0, Max = 100, Min = 0, Decimals = 1, Suffix = "%"})
+rage_aimbot:CreateToggle({Name = "Silent Aim", State = false})
+rage_aimbot:CreateToggle({Name = "Wallbang", State = false})
+rage_aimbot:CreateToggle({Name = "Autoshoot", State = false})
+rage_aimbot:CreateToggle({Name = "Hitscan", State = false})
+rage_aimbot:CreateSlider({Name = "Minimum Damage", State = 10, Max = 100, Min = 1, Decimals = 0, Suffix = "hp"})
+
+-- Rage Other Section
+rage_other:CreateToggle({Name = "Knife Bot", State = false})
+rage_other:CreateToggle({Name = "Zeus Bot", State = false})
+rage_other:CreateToggle({Name = "Auto Peek", State = false})
+rage_other:CreateToggle({Name = "Edge Jump", State = false})
+rage_other:CreateToggle({Name = "Quick Stop", State = false})
+rage_other:CreateDropdown({Name = "Resolver", State = 1, Options = {"Off", "Basic", "Advanced"}})
+rage_other:CreateToggle({Name = "Backtrack", State = false})
+rage_other:CreateSlider({Name = "Backtrack Time", State = 200, Max = 400, Min = 0, Decimals = 0, Suffix = "ms"})
+
 -- Anti-Aim Page
 local antiaim = window:CreatePage({Icon = "rbxassetid://17321469922"})
 local antiaim_angles = antiaim:CreateSection({Name = "Anti-aimbot angles", Size = 510, Side = "Left"})
 local antiaim_fakelag = antiaim:CreateSection({Name = "Fake lag", Size = 245, Side = "Right"})
 local antiaim_other = antiaim:CreateSection({Name = "Other", Size = 245, Side = "Right"})
 
+-- Anti-Aimbot Angles Section
+antiaim_angles:CreateToggle({Name = "Enabled", State = false})
+antiaim_angles:CreateDropdown({Name = "Yaw Base", State = 1, Options = {"At Target", "Static", "Random"}})
+antiaim_angles:CreateSlider({Name = "Yaw Offset", State = 0, Max = 180, Min = -180, Decimals = 1, Suffix = "°"})
+antiaim_angles:CreateDropdown({Name = "Pitch", State = 1, Options = {"Off", "Down", "Up", "Fake Up", "Fake Down"}})
+antiaim_angles:CreateToggle({Name = "Jitter", State = false})
+antiaim_angles:CreateSlider({Name = "Jitter Angle", State = 30, Max = 180, Min = 0, Decimals = 1, Suffix = "°"})
+antiaim_angles:CreateToggle({Name = "Spinbot", State = false})
+antiaim_angles:CreateSlider({Name = "Spin Speed", State = 50, Max = 100, Min = 0, Decimals = 1, Suffix = "%"})
+
+-- Fake Lag Section
+antiaim_fakelag:CreateToggle({Name = "Enabled", State = false})
+antiaim_fakelag:CreateDropdown({Name = "Mode", State = 1, Options = {"Static", "Adaptive", "Random"}})
+antiaim_fakelag:CreateSlider({Name = "Limit", State = 6, Max = 14, Min = 1, Decimals = 0, Suffix = "ticks"})
+antiaim_fakelag:CreateToggle({Name = "On Shot", State = false})
+
+-- Anti-Aim Other Section
+antiaim_other:CreateToggle({Name = "Fake Duck", State = false})
+antiaim_other:CreateKeybind({Name = "Fake Duck Key"})
+antiaim_other:CreateToggle({Name = "Slow Walk", State = false})
+antiaim_other:CreateKeybind({Name = "Slow Walk Key"})
+antiaim_other:CreateToggle({Name = "Legit AA on Knife", State = false})
+
 -- Aimbot Page
 local aimbot = window:CreatePage({Icon = "rbxassetid://8547249956"})
 local aimbot_main = aimbot:CreateSection({Name = "Aimbot", Size = 510, Side = "Left"})
 local aimbot_triggerbot = aimbot:CreateSection({Name = "Triggerbot", Size = 330, Side = "Right"})
 local aimbot_other = aimbot:CreateSection({Name = "Other", Size = 160, Side = "Right"})
+
+-- Aimbot Main Section
+aimbot_main:CreateToggle({Name = "Enabled", State = false})
+aimbot_main:CreateKeybind({Name = "Aimbot Key"})
+aimbot_main:CreateDropdown({Name = "Hitbox", State = 1, Options = {"Head", "Chest", "Pelvis", "Multi-Hitbox"}})
+aimbot_main:CreateSlider({Name = "FOV", State = 60, Max = 180, Min = 0, Decimals = 1, Suffix = "°"})
+aimbot_main:CreateSlider({Name = "Smoothness", State = 20, Max = 100, Min = 0, Decimals = 1, Suffix = "%"})
+aimbot_main:CreateToggle({Name = "Lock Target", State = false})
+aimbot_main:CreateToggle({Name = "Visible Only", State = false})
+aimbot_main:CreateToggle({Name = "Team Check", State = true})
+
+-- Triggerbot Section
+aimbot_triggerbot:CreateToggle({Name = "Enabled", State = false})
+aimbot_triggerbot:CreateKeybind({Name = "Trigger Key"})
+aimbot_triggerbot:CreateSlider({Name = "Delay", State = 0, Max = 500, Min = 0, Decimals = 0, Suffix = "ms"})
+aimbot_triggerbot:CreateToggle({Name = "Hitchance", State = false})
+aimbot_triggerbot:CreateSlider({Name = "Hitchance Percent", State = 80, Max = 100, Min = 0, Decimals = 1, Suffix = "%"})
+
+-- Aimbot Other Section
+aimbot_other:CreateToggle({Name = "Autowall", State = false})
+aimbot_other:CreateToggle({Name = "Killshot", State = false})
+aimbot_other:CreateToggle({Name = "Movement Prediction", State = false})
 
 -- Visuals Page
 local visuals = window:CreatePage({Icon = "rbxassetid://8547254518"})
@@ -2498,23 +2565,148 @@ local visuals_coloredmodels = visuals:CreateSection({Name = "Colored models", Si
 local visuals_otheresp = visuals:CreateSection({Name = "Other ESP", Size = 200, Side = "Right"})
 local visuals_effects = visuals:CreateSection({Name = "Effects", Size = 288, Side = "Right"})
 
+-- Player ESP Section
+visuals_playeresp:CreateKeybind({Name = "Activation Type"})
+visuals_playeresp:CreateToggle({Name = "Teammates", State = false})
+visuals_playeresp:CreateColorpicker({Name = "Visualize aimbot", State = Color3.fromRGB(255, 0, 0)})
+visuals_playeresp:CreateColorpicker({Name = "Bounding Box", State = Color3.fromRGB(50, 100, 200)})
+visuals_playeresp:CreateColorpicker({Name = "Glow", State = Color3.fromRGB(25, 180, 75)})
+visuals_playeresp:CreateToggle({Name = "Dormant", State = false})
+visuals_playeresp:CreateToggle({Name = "Bounding Box", State = false})
+visuals_playeresp:CreateToggle({Name = "Health Bar", State = false})
+visuals_playeresp:CreateToggle({Name = "Name", State = false})
+visuals_playeresp:CreateToggle({Name = "Flags", State = false})
+visuals_playeresp:CreateToggle({Name = "Weapon Text", State = false})
+visuals_playeresp:CreateToggle({Name = "Weapon Icon", State = false})
+visuals_playeresp:CreateToggle({Name = "Ammo", State = false})
+visuals_playeresp:CreateToggle({Name = "Distance", State = false})
+visuals_playeresp:CreateToggle({Name = "Glow", State = false})
+visuals_playeresp:CreateToggle({Name = "Hit Marker", State = false})
+visuals_playeresp:CreateToggle({Name = "Hit Marker Sound", State = false})
+visuals_playeresp:CreateToggle({Name = "Visualize sounds", State = false})
+visuals_playeresp:CreateToggle({Name = "Line of sight", State = false})
+visuals_playeresp:CreateToggle({Name = "Money", State = false})
+visuals_playeresp:CreateToggle({Name = "Skeleton", State = false})
+visuals_playeresp:CreateToggle({Name = "Out of FOV arrow", State = true})
+visuals_playeresp:CreateSlider({Name = "Font Size", State = 12, Max = 30, Min = 1, Decimals = 1, Suffix = "px"})
+visuals_playeresp:CreateSlider({Name = "Opacity", State = 100, Max = 100, Min = 1, Decimals = 1, Suffix = "%"})
+
+-- Colored Models Section
+visuals_coloredmodels:CreateToggle({Name = "Player", State = false})
+visuals_coloredmodels:CreateToggle({Name = "Player behind wall", State = false})
+visuals_coloredmodels:CreateToggle({Name = "Teammate", State = false})
+visuals_coloredmodels:CreateToggle({Name = "Teammate behind wall", State = false})
+visuals_coloredmodels:CreateToggle({Name = "Local player", State = false})
+visuals_coloredmodels:CreateToggle({Name = "Local player fake", State = false})
+visuals_coloredmodels:CreateToggle({Name = "Ragdolls", State = false})
+visuals_coloredmodels:CreateToggle({Name = "Hands", State = false})
+visuals_coloredmodels:CreateToggle({Name = "Weapon viewmodel", State = false})
+visuals_coloredmodels:CreateToggle({Name = "Disable model occlusion", State = false})
+visuals_coloredmodels:CreateToggle({Name = "Shadow", State = false})
+visuals_coloredmodels:CreateToggle({Name = "Props", State = false})
+
+-- Other ESP Section
+visuals_otheresp:CreateToggle({Name = "Radar", State = false})
+visuals_otheresp:CreateMultibox({Name = "Dropped weapons", State = {1, 3, 4}, Options = {"Icon", "Text", "Glow", "Ammo", "Distance"}})
+visuals_otheresp:CreateToggle({Name = "Grenades", State = false})
+visuals_otheresp:CreateToggle({Name = "Inaccuracy overlay", State = false})
+visuals_otheresp:CreateToggle({Name = "Recoil overlay", State = false})
+visuals_otheresp:CreateToggle({Name = "Crosshair", State = false})
+visuals_otheresp:CreateToggle({Name = "Bomb", State = false})
+visuals_otheresp:CreateToggle({Name = "Grenade trajectory", State = false})
+visuals_otheresp:CreateToggle({Name = "Grenade proximity warning", State = false})
+visuals_otheresp:CreateToggle({Name = "Spectators", State = false})
+visuals_otheresp:CreateToggle({Name = "Penetration reticle", State = false})
+visuals_otheresp:CreateToggle({Name = "Hostages", State = false})
+visuals_otheresp:CreateToggle({Name = "Shared esp", State = false})
+visuals_otheresp:CreateToggle({Name = "Upgrade tablet", State = false})
+visuals_otheresp:CreateToggle({Name = "Danger Zone items", State = false})
+
+-- Effects Section
+visuals_effects:CreateToggle({Name = "Remove flashbang effects", State = false})
+visuals_effects:CreateToggle({Name = "Remove smoke grenades", State = false})
+visuals_effects:CreateToggle({Name = "Remove fog", State = false})
+visuals_effects:CreateToggle({Name = "Remove grass", State = false})
+visuals_effects:CreateToggle({Name = "Remove skybox", State = false})
+visuals_effects:CreateDropdown({Name = "Visual Recoil Adjustment", State = 1, Options = {"Off", "Remove Shake", "Remove All"}})
+visuals_effects:CreateSlider({Name = "Transparent walls", State = 50, Max = 100, Min = 0, Decimals = 1, Suffix = "%"})
+visuals_effects:CreateSlider({Name = "Transparent props", State = 50, Max = 100, Min = 0, Decimals = 1, Suffix = "%"})
+visuals_effects:CreateDropdown({Name = "Brightness Adjustment", State = 1, Options = {"Off", "Night Mode", "Full Bright"}})
+visuals_effects:CreateToggle({Name = "Remove scope overlay", State = false})
+visuals_effects:CreateToggle({Name = "Instant scope", State = false})
+visuals_effects:CreateToggle({Name = "Disable post processing", State = false})
+visuals_effects:CreateToggle({Name = "Force third person (alive)", State = false})
+visuals_effects:CreateToggle({Name = "Force third person (dead)", State = false})
+visuals_effects:CreateToggle({Name = "Disable rendering of teammates", State = false})
+visuals_effects:CreateToggle({Name = "Bullet tracers", State = false})
+visuals_effects:CreateToggle({Name = "Bullet impacts", State = false})
+visuals_effects:CreateToggle({Name = "Override Skybox", State = false})
+
 -- Settings Page
 local setting = window:CreatePage({Icon = "rbxassetid://8547256547"})
 local setting_misc = setting:CreateSection({Name = "Miscellaneous", Size = 510, Side = "Left"})
 local setting_movement = setting:CreateSection({Name = "Movement", Size = 245, Side = "Right"})
 local setting_settings = setting:CreateSection({Name = "Settings", Size = 245, Side = "Right"})
 
+-- Miscellaneous Section
+setting_misc:CreateToggle({Name = "Bunny Hop", State = false})
+setting_misc:CreateToggle({Name = "Auto Strafe", State = false})
+setting_misc:CreateDropdown({Name = "Strafe Mode", State = 1, Options = {"Silent", "Normal", "Rage"}})
+setting_misc:CreateToggle({Name = "Fast Walk", State = false})
+setting_misc:CreateToggle({Name = "Slide Walk", State = false})
+setting_misc:CreateToggle({Name = "Kill Say", State = false})
+setting_misc:CreateToggle({Name = "Clantag Changer", State = false})
+setting_misc:CreateToggle({Name = "Chat Spam", State = false})
+
+-- Movement Section
+setting_movement:CreateToggle({Name = "Circle Strafe", State = false})
+setting_movement:CreateKeybind({Name = "Circle Strafe Key"})
+setting_movement:CreateToggle({Name = "Air Stuck", State = false})
+setting_movement:CreateKeybind({Name = "Air Stuck Key"})
+setting_movement:CreateToggle({Name = "Jump Bug", State = false})
+setting_movement:CreateToggle({Name = "Edge Bug", State = false})
+
+-- Settings Section
+setting_settings:CreateToggle({Name = "Menu Accent", State = false})
+setting_settings:CreateColorpicker({Name = "Menu Color", State = Color3.fromRGB(255, 255, 255)})
+setting_settings:CreateKeybind({Name = "Menu Toggle Key"})
+setting_settings:CreateToggle({Name = "Watermark", State = true})
+setting_settings:CreateToggle({Name = "Show Keybinds", State = false})
+setting_settings:CreateToggle({Name = "Show FPS", State = false})
+
 -- Players Page
 local players = window:CreatePage({Icon = "rbxassetid://8547269749"})
 local players_main = players:CreateSection({Name = "Players", Size = 510, Side = "Left"})
 local players_adjustments = players:CreateSection({Name = "Adjustments", Size = 510, Side = "Right"})
+
+-- Players Main Section
+players_main:CreateToggle({Name = "Friendly Fire", State = false})
+players_main:CreateToggle({Name = "Override Resolver", State = false})
+players_main:CreateDropdown({Name = "Player Priority", State = 1, Options = {"None", "High", "Low"}})
+players_main:CreateToggle({Name = "Mark Players", State = false})
+
+-- Players Adjustments Section
+players_adjustments:CreateSlider({Name = "Health Filter", State = 100, Max = 100, Min = 0, Decimals = 0, Suffix = "hp"})
+players_adjustments:CreateToggle({Name = "Ignore Dormant", State = false})
+players_adjustments:CreateToggle({Name = "Ignore Friends", State = true})
+players_adjustments:CreateToggle({Name = "Ignore Teammates", State = true})
 
 -- Config Page
 local config = window:CreatePage({Icon = "rbxassetid://11768914234"})
 local config_presets = config:CreateSection({Name = "Presets", Size = 510, Side = "Left"})
 local config_adjustments = config:CreateSection({Name = "Adjustments", Size = 510, Side = "Right"})
 
--- Example Toggle
+-- Presets Section
+config_presets:CreateDropdown({Name = "Config List", State = 1, Options = {"Default", "Legit", "Rage", "Custom"}})
+config_presets:CreateButton({Name = "Load Config"})
+config_presets:CreateButton({Name = "Save Config"})
+config_presets:CreateButton({Name = "Delete Config"})
+config_presets:CreateTextbox({Name = "Config Name", Placeholder = "Enter config name"})
+
+-- Adjustments Section
+config_adjustments:CreateToggle({Name = "Load on startup", State = false})
+config_adjustments:CreateToggle({Name = "Auto Save", State = false})
+config_adjustments:CreateButton({Name = "Reset to Default"})
+config_adjustments:CreateToggle({Name = "Cloud Config", State = false})
+
 end)
-CreateWaveEffect()
---
